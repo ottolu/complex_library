@@ -1,5 +1,29 @@
+/*
+ * Copyright (C) 2013 Otto Lu <llw33333@gmail.com>.
+ *
+ * Licensed under the WTFPL, Version 2.0 (the "License"); 
+ * You may obtain a copy of the License at
+ *
+ *   http://www.wtfpl.net/about/
+ *
+ *         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+ *                   Version 2, December 2004 
+ *
+ * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+ *
+ * Everyone is permitted to copy and distribute verbatim or modified 
+ * copies of this license document, and changing it is allowed as long 
+ * as the name is changed. 
+ *
+ *           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+ *  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+ *
+ * 0. You just DO WHAT THE FUCK YOU WANT TO.
+ */
+
 #ifndef _COMPLEX_H_
 #define _COMPLEX_H_
+#pragma once
 
 #include <iostream>
 #include <cmath>
@@ -12,9 +36,9 @@ private:
 	type _imag;
 
 public:
-	complex():_real(), _imag() {}
+	complex():_real(0), _imag(0) {}
 	complex(type _real, type _imag):_real(_real), _imag(_imag) {}
-	complex(complex<type> &_comp) { 
+	complex(const complex<type> &_comp) { 
 		this->_real = _comp.real();
 		this->_imag = _comp.imag();
 	}
@@ -31,7 +55,7 @@ public:
 		return this->val();
 	}
 
-	complex<type>& operator ()(type _real, type _imag) {
+	const complex<type>& operator ()(type _real, type _imag) {
 		this->_real = _real;
 		this->_imag = _imag;
 		return *this;
@@ -64,7 +88,7 @@ public:
 
 	complex<type>& operator /=(const complex<type> &comp2) {
 		type divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag(),
-			 real = this->_real;
+			real = this->_real;
 
 		this->_real = this->_real * comp2.real() + this->_imag * comp2.imag();
 		this->_imag = this->_imag * comp2.real() - real * comp2.imag();
@@ -84,54 +108,49 @@ public:
 
 template<typename type>
 complex<type> operator -(const complex<type> &comp1) {
-	complex<type> comp;
-	return comp(-comp1.real(), -comp1.imag());
+	return complex<type>comp(-comp1.real(), -comp1.imag());
 }
 
 template<typename type>
 complex<type> operator +(const complex<type> &comp1, const complex<type> &comp2) {
-	complex<type> comp;
-	return comp(comp1.real() + comp2.real(), comp1.imag() + comp2.imag());
+	return complex<type>(comp1.real() + comp2.real(), comp1.imag() + comp2.imag());
 }
 
 template<typename type>
 complex<type> operator -(const complex<type> &comp1, const complex<type> &comp2) {
-	complex<type> comp;
-	return comp(comp1.real() - comp2.real(), comp1.imag() - comp2.imag());
+	return complex<type>(comp1.real() - comp2.real(), comp1.imag() - comp2.imag());
 }
 
 template<typename type>
 complex<type> operator *(const complex<type> &comp1, const complex<type> &comp2) {
-	complex<type> comp;
 	type real = comp1.real() * comp2.real() - comp1.imag() * comp2.imag(),
-		 imag = 2 * comp1.real() * comp2.imag();
-	return comp(real, imag);
+		imag = 2 * comp1.real() * comp2.imag();
+	return complex<type>(real, imag);
 }
 
 template<typename type>
 complex<type> operator /(const complex<type> &comp1, const complex<type> &comp2) {
-	complex<type> comp;
 	type real = comp1.real() * comp2.real() + comp1.imag() * comp2.imag(),
-		 imag = comp1.imag() * comp2.real() - comp1.real() * comp2.imag(),
-		 divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag();
+		imag = comp1.imag() * comp2.real() - comp1.real() * comp2.imag(),
+		divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag();
 
 	real /= divisor;
 	imag /= divisor;
 
-	return comp(real, imag);
+	return complex<type>(real, imag);
 }
 
 namespace std
 {
-    template<typename type>
-    complex<type> pow(complex<type> &comp, int times) {
+	template<typename type>
+	complex<type> pow(complex<type> &comp, int times) {
 		for (int i = 1; i < times; ++i) {
 			comp = comp * comp;
 		}
 		return comp;
 	}
 
-	//暂不提供
+	//TODO:
 	//template<typename type>
 	//complex<type> sqrt(complex<type> &comp) {
 
@@ -145,19 +164,19 @@ bool operator ==(const complex<type> &comp1, const complex<type> &comp2) {
 
 template<typename type>
 std::ostream& operator <<(std::ostream& stream, const complex<type> &comp) {
-	stream<<comp.real()<<'+'<<comp.imag()<<'i';
+	stream << comp.real() << '+' << comp.imag() << 'i';
 	return stream;
 }
 
 template<typename type>
 std::istream& operator >>(std::istream& stream, complex<type> &comp) {  
 	type real, imag;
-    stream>>real>>imag;
+	stream >> real >> imag;
 	comp(real, imag);
 	return stream;
 }  
 
-//危险的API
+//NOT RECOMMENDED API
 //template<typename type>
 //bool operator <(const complex<type> &comp, type val) {
 //	return comp.val() < val;

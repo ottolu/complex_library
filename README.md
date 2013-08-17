@@ -2,9 +2,9 @@ Complex 库
 ====================
 
 * @author: `Otto Lu`
-* @version: 0.001
+* @version: 0.002
 * @description: `一个挫逼的简单的复数运算库`
-* @license: MIT
+* @license: WTFPL
 
 ---------------------------
 ###使用说明
