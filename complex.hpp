@@ -64,7 +64,7 @@ public:
 
 	complex<type>& operator /=(const complex<type> &comp2) {
 		type divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag(),
-			 real = this->_real;
+			real = this->_real;
 
 		this->_real = this->_real * comp2.real() + this->_imag * comp2.imag();
 		this->_imag = this->_imag * comp2.real() - real * comp2.imag();
@@ -104,7 +104,7 @@ template<typename type>
 complex<type> operator *(const complex<type> &comp1, const complex<type> &comp2) {
 	complex<type> comp;
 	type real = comp1.real() * comp2.real() - comp1.imag() * comp2.imag(),
-		 imag = 2 * comp1.real() * comp2.imag();
+		imag = 2 * comp1.real() * comp2.imag();
 	return comp(real, imag);
 }
 
@@ -112,8 +112,8 @@ template<typename type>
 complex<type> operator /(const complex<type> &comp1, const complex<type> &comp2) {
 	complex<type> comp;
 	type real = comp1.real() * comp2.real() + comp1.imag() * comp2.imag(),
-		 imag = comp1.imag() * comp2.real() - comp1.real() * comp2.imag(),
-		 divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag();
+		imag = comp1.imag() * comp2.real() - comp1.real() * comp2.imag(),
+		divisor = comp2.real() * comp2.real() + comp2.imag() * comp2.imag();
 
 	real /= divisor;
 	imag /= divisor;
@@ -123,8 +123,8 @@ complex<type> operator /(const complex<type> &comp1, const complex<type> &comp2)
 
 namespace std
 {
-    template<typename type>
-    complex<type> pow(complex<type> &comp, int times) {
+	template<typename type>
+	complex<type> pow(complex<type> &comp, int times) {
 		for (int i = 1; i < times; ++i) {
 			comp = comp * comp;
 		}
@@ -144,29 +144,54 @@ bool operator ==(const complex<type> &comp1, const complex<type> &comp2) {
 }
 
 template<typename type>
+bool operator !=(const complex<type> &comp1, const complex<type> &comp2) {
+	return !(comp1.real() == comp2.real() && comp1.imag() == comp2.imag());
+}
+
+template<typename type>
 std::ostream& operator <<(std::ostream& stream, const complex<type> &comp) {
 	stream<<comp.real()<<'+'<<comp.imag()<<'i';
 	return stream;
 }
 
 template<typename type>
-std::istream& operator >>(std::istream& stream, complex<type> &comp) {  
+std::istream& operator >>(std::istream& stream, complex<type> &comp) {
 	type real, imag;
-    stream>>real>>imag;
+	stream>>real>>imag;
 	comp(real, imag);
 	return stream;
 }  
 
 //Î£ÏÕµÄAPI
-//template<typename type>
-//bool operator <(const complex<type> &comp, type val) {
-//	return comp.val() < val;
-//}
-//
-//template<typename type>
-//bool operator >(const complex<type> &comp, type val) {
-//	return comp.val() > val;
-//}
+template<typename type>
+bool operator <(type val, const complex<type> &comp) {
+	return val < comp.val();
+}
+
+template<typename type>
+bool operator >(type val, const complex<type> &comp) {
+	return val > comp.val();
+}
+
+template<typename type>
+bool operator <(const complex<type> &comp, type val) {
+	return comp.val() < val;
+}
+
+template<typename type>
+bool operator >(const complex<type> &comp, type val) {
+	return comp.val() > val;
+}
+
+template<typename type>
+bool operator <(const complex<type> &comp1, const complex<type> &comp2) {
+	return comp1.val() < comp2.val();
+}
+
+template<typename type>
+bool operator >(const complex<type> &comp1, const complex<type> &comp2) {
+	return comp1.val() > comp2.val();
+}
 
 typedef complex<float> fcomplex;
 typedef complex<double> dcomplex;
